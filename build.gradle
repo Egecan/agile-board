@@ -1,0 +1,59 @@
+group 'eugene.board'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'groovy'
+
+mainClassName = 'eugene.board.Board'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+    test {
+        groovy {
+            srcDirs = ['test']
+        }
+        resources {
+            srcDirs = ['test/resources']
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile("org.codehaus.groovy:groovy-all:2.4.7")
+    testCompile("org.spockframework:spock-core:1.1-groovy-2.4")
+    testCompile("junit:junit:4.12")
+}
+
+test {
+    dependsOn 'cleanTest'
+    testLogging {
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                println "Test results: ${result.resultType} (${result.testCount} tests, " +
+                        "${result.successfulTestCount} passed, ${result.failedTestCount} failed, " +
+                        "${result.skippedTestCount} skipped)"
+            }
+        }
+    }
+}
+
+run() {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+}
